@@ -1,1 +1,74 @@
+#include <LiquidCrystal.h>
 
+ const int botonIncremento = 9;
+ const int botonDecremento = 10;
+
+ const int tiempoAntirebote = 10;
+ int cuenta = 0,decena, unidad;
+ int estadoBotonIncremento;
+ int estadoBotonAnteriorIncremento;
+ int estadoBotonDecremento;
+ int estadoBotonAnteriorDecremento;
+
+ boolean antirebote(int pin){
+   int contador = 0;
+   boolean estado;
+   boolean estadoAnterior;
+
+   do {
+    estado = digitalRead(pin);
+    if( estado != estadoAnterior) {
+      contador = 0;
+      estadoAnterior = estado;
+      }
+    else {
+      contador = contador + 1;
+      }
+      delay(10);
+    }while(contador < tiempoAntirebote);
+
+     return estado;
+  }
+
+LiquidCrystal lcd(12,11,2,3,4,5);
+
+void setup() {
+   pinMode(botonIncremento, INPUT);
+   pinMode(botonDecremento, INPUT);
+   Serial.begin(9600);
+  
+  lcd.begin(16, 2);
+
+}
+
+void loop() {
+  
+    estadoBotonIncremento = digitalRead(botonIncremento);
+    if(estadoBotonIncremento != estadoBotonAnteriorIncremento) {
+      if(antirebote(botonIncremento)) {
+        cuenta++;
+        if(cuenta > 99){
+          cuenta = 99;
+          }
+       }  
+    }  
+    estadoBotonAnteriorIncremento = estadoBotonIncremento;   
+
+    estadoBotonDecremento = digitalRead(botonDecremento);
+    if(estadoBotonDecremento != estadoBotonAnteriorDecremento) {
+      if(antirebote(botonDecremento)) {
+        cuenta--;
+        if(cuenta < 0){
+          cuenta = 0;
+          }
+       }  
+    }  
+    estadoBotonAnteriorDecremento = estadoBotonDecremento; 
+  
+    decena=cuenta/10.0;
+    unidad=cuenta-(decena*10);
+ lcd.setCursor(0, 0);
+  lcd.print("Contador en:");
+  lcd.print(decena);
+  lcd.print(unidad);
+}
