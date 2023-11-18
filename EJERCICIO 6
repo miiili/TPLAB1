@@ -1,0 +1,27 @@
+#include <LiquidCrystal.h>
+
+#define sensor A0
+float cont = 0;
+float prom;
+float Valor;
+
+LiquidCrystal lcd(12,11,2,3,4,5);
+
+void setup() {
+  pinMode(sensor, INPUT);
+  Serial.begin(9600);
+
+  lcd.begin(16, 2);
+
+  lcd.setCursor(0, 0);
+  lcd.print("La temp es:");
+ 
+}
+
+void loop() {
+   Valor = analogRead(sensor);
+  int variable = (Valor * 100) / 255;
+   lcd.setCursor(0, 1);
+  lcd.print(variable);
+ delay(1000);
+}
