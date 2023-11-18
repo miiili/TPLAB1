@@ -1,4 +1,2 @@
 # TPLAB1
-Lautaro Sosa
-Maia Garillo
-Milagros Solis
+Los ejercicios 3 y 7 los estamos haciendo.
