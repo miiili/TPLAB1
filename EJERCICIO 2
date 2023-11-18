@@ -1,0 +1,73 @@
+int cont = 0;
+int decena, unidad, prom;
+float Valor;
+#define a 8
+#define b 7
+#define c 6
+#define d 5
+#define e 4
+#define f 3
+#define g 2
+#define unidad1 10
+#define decena1 9
+#define sensor A0
+
+void setup() {
+  pinMode(a, OUTPUT);
+  pinMode(b, OUTPUT);
+  pinMode(c, OUTPUT);
+  pinMode(d, OUTPUT);
+  pinMode(e, OUTPUT);
+  pinMode(f, OUTPUT);
+  pinMode(g, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(sensor, INPUT);
+  Serial.begin(9600);
+}
+
+void displayDigit(int digit) {
+  switch (digit) {
+    case 0:
+      digitalWrite(a, HIGH);
+      digitalWrite(b, HIGH);
+      digitalWrite(c, HIGH);
+      digitalWrite(d, HIGH);
+      digitalWrite(e, HIGH);
+      digitalWrite(f, HIGH);
+      digitalWrite(g, LOW);
+      break;
+    case 1:
+      digitalWrite(a, LOW);
+      digitalWrite(b, HIGH);
+      digitalWrite(c, HIGH);
+      digitalWrite(d, LOW);
+      digitalWrite(e, LOW);
+      digitalWrite(f, LOW);
+      digitalWrite(g, LOW);
+      break;
+    case 2:
+  }
+}
+
+void loop() {
+  Valor = analogRead(sensor);
+  int variable = (Valor * 100) / 255;
+  Serial.println(variable);
+
+  prom = variable;
+  decena = prom / 10;
+  unidad = prom - (decena * 10);
+  Serial.println(prom);
+
+  digitalWrite(11, HIGH);
+  displayDigit(unidad);
+  delay(10);
+  digitalWrite(11, LOW);
+
+  digitalWrite(10, HIGH);
+  displayDigit(decena);
+  delay(10);
+  digitalWrite(10, LOW);
+}
+
