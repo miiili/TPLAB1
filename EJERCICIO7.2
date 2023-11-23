@@ -1,0 +1,72 @@
+#include <LiquidCrystal.h>//libreria de la pantalla 
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //Configura los pines de salida para la lcd
+byte letra1[8] = { B00100, B10110, B01110, B11011, B11011, B01110, B10110, B00100 };
+byte letra2[8] = { B00100, B10110, B01110, B11011, B11011, B01110, B10110, B00100 };
+byte letra6[8] = { B00100, B10110, B01110, B11011, B11011, B01110, B10110, B00100 };
+byte letra0[8] = { B00000, B00000, B00000, B00000, B00000, B00000, B00000, B00000 };
+byte letra3[8] = { B00000, B00000, B00000, B11111, B11111, B11111, B11111, B11111 };
+byte letra4[8] = { B00000, B11111, B11111, B11111, B11111, B11111, B11111, B11111 };
+byte letra5[8] = { B01110, B11111, B11111, B11111, B11111, B11111, B11111, B11111 };
+int x=15;
+int y=1;
+int roca=0;
+int mov=300;
+int puntaje=0;
+int GameOver=3;
+void setup(){
+  lcd.begin(16, 2);
+  lcd.createChar(1, letra1);
+  lcd.createChar(2, letra2);
+  lcd.createChar(3, letra3);
+  lcd.createChar(4, letra4);
+  lcd.createChar(5, letra5);
+  lcd.createChar(0, letra0);
+  lcd.createChar(6, letra6);
+}
+void loop(){
+  lcd.setCursor(0, 0); //Coloca el numero 0 
+  lcd.print(roca);
+  lcd.setCursor(x,y);
+  lcd.write(byte(3));
+  delay(mov);
+  lcd.setCursor(x,y);
+  lcd.write(byte(4));
+  delay(mov);
+  lcd.setCursor(x,y);
+  lcd.write(byte(5));
+  delay(mov);
+  lcd.clear();
+  lcd.setCursor(GameOver, 1); 
+  lcd.setCursor(3, 1);  
+  lcd.write(byte(1)); 
+  if (digitalRead(7) == HIGH){ 
+    lcd.setCursor(3, 1);
+    lcd.write(byte(0));
+    lcd.setCursor(3, 0);
+    lcd.write(byte(2));
+  }
+     else if(3 == x){
+      lcd.clear();
+      lcd.setCursor(3, 0);
+      lcd.print("Game Over");
+      lcd.setCursor(7, 1);
+      lcd.write(byte(6));
+      delay(3000);
+      puntaje=roca;
+      lcd.setCursor(3, 1);
+      lcd.print("Puntaje:");
+      lcd.setCursor(12, 1);
+      lcd.print(puntaje);
+      delay(6000);
+      roca=0;
+     }
+   x=x-1;              
+  if (x<=0) {  
+     x=15;                        
+  }
+ mov = random(1,200);
+if(GameOver == x){ 
+  lcd.clear();
+  roca++;
+}
+}
