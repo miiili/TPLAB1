@@ -1,0 +1,79 @@
+#include <LiquidCrystal.h>
+#include <avr/wdt.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+const int boton = 7;
+const int ledPin = 8;
+int valor;
+int contador = 0;
+int estadoanteriorboton = 0;
+int validarPar = contador % 2;
+int i = 1;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+unsigned long tiempoPulsado = 0;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  pinMode(ledPin, OUTPUT);
+  pinMode(boton, INPUT);
+  lcd.print("Central de Datos");
+  lcd.setCursor(0, 1);
+  lcd.print("Pulsar");
+}
+
+void loop() {
+  valor = digitalRead(boton);
+
+  if ((valor == HIGH) && (estadoanteriorboton == LOW)) {
+    lastDebounceTime = millis();
+  }
+  if ((valor == LOW) && (estadoanteriorboton == HIGH)) {
+    tiempoPulsado = millis() - lastDebounceTime;
+    contador += tiempoPulsado / 1000;
+    if (contador > 100) {
+      contador = 100;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Carga completa");
+      if (contador == 100) {
+  lcd.clear();
+  lcd.print("Carga completa");
+  delay(2000);
+  wdt_enable(WDTO_15MS);
+  while (1) {}
+}
+      delay(2000);
+    }
+    else if (contador < 100) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Error: No llego");
+      lcd.setCursor(0, 1);
+      lcd.print("al 100%");
+      delay(2000);
+    }
+    lcd.clear();
+    lcd.setCursor(5 , 0);
+    if (contador > 0) {
+      lcd.print(contador);
+    }
+    lcd.print("%");
+  }
+  if ((valor == HIGH) && (estadoanteriorboton == HIGH)) {
+    tiempoPulsado = millis() - lastDebounceTime;
+    contador += tiempoPulsado / 1000;
+    if (contador > 100) {
+      contador = 100;
+    }
+    lcd.clear();
+    lcd.setCursor(5 , 0);
+    if (contador > 0) {
+      lcd.print(contador);
+    }
+    lcd.print("%");
+  }
+  estadoanteriorboton = valor;
+}
+
